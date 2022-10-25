@@ -1,0 +1,19 @@
+.pet-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.pet-list-item {
+    border: 1px solid #333;
+    width: 300px;
+}
+
+.profilePic {
+    height: 200px;
+    width: 200px;
+    background: black;
+    border-radius: 50%;
+}
