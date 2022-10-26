@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import Pets from './views/pets';
+import Treats, { treatsLoader } from './views/treats';
 
 import {
   RouterProvider,
@@ -19,8 +20,9 @@ const router = createBrowserRouter([
   },
   {
     path: '/treats',
-    element: <ul><li>treat1</li><li>treat2</li><li>treat3</li></ul>
-  }
+    element: <Treats></Treats>,
+    loader: treatsLoader,
+  },
 ]);
 
 function App() {
