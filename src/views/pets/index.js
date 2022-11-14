@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import './styles.css';
+import PetsService from './pets-service';
 
 
 /** 
@@ -11,52 +13,9 @@ import './styles.css';
  * 
 */
 
-const defaultPets = [
-    {
-        id: 1,
-        name: 'Boo',
-        description: 'Cute maltipoo big boi',
-        weight: 20,
-        treatLimit: null, // this should be calculated from weight not a set value
-        caloriesEaten: 0,
-        treatsEaten: 0,
-        pic: null
-    },
-    {
-        id: 2,
-        name: 'Macchi',
-        description: 'Handsome shiba',
-        weight: 25,
-        treatLimit: null, // this should be calculated from weight not a set value
-        caloriesEaten: 0,
-        treatsEaten: 0,
-        pic: null
-    },
-    {
-        id: 3,
-        name: 'Char',
-        description: 'Pretty shiba',
-        weight: 22,
-        treatLimit: null, // this should be calculated from weight not a set value
-        caloriesEaten: 0,
-        treatsEaten: 0,
-        pic: null
-    },
-    {
-        id: 4,
-        name: 'Koko',
-        description: 'Kawawa shiba',
-        weight: 20,
-        treatLimit: null, // this should be calculated from weight not a set value
-        caloriesEaten: 0,
-        treatsEaten: 0,
-        pic: null
-    },
-]
 
 function Pets () {
-
-    const [pets, setPets] = useState(defaultPets);
+    const [pets, setPets] = useState(useLoaderData());
 
     return (
         <>
@@ -79,4 +38,11 @@ function Pets () {
     )
 }
 
+const petsLoader = async () => {
+    let pets = await PetsService.getPets();
+    return pets
+}
+export {
+    petsLoader
+}
 export default Pets;
