@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
-import MockTreatsService from './mockTreatsService';
+import TreatsService from './treats-service';
 
 function Treats() {
     const {
@@ -13,23 +13,23 @@ function Treats() {
         name: '',
         desc: '',
         cals: 0,
-        tags: [],
     })
-    function handleSubmit() {
-        let lastTreatId = treats[treats.length - 1].id;
-        let newTreat = {...addParams, id: lastTreatId + 1};
-        setTreats([...treats, newTreat]);
+    async function handleSubmit() {
+        let newTreat = {
+            ...addParams
+        };
+        await TreatsService.addTreat(newTreat);
+        let updatedTreats = await TreatsService.getTreats();
+        setTreats(updatedTreats);
         setIsAdding(false)
     }
 
-
-    function removeTreat(idx) {
-        // in practice.. this would simply send an http req to delete from server
-        // but right now... is going to remove it from the local state.
-        let copy = [...treats];
-        copy.splice(idx, 1)
-        setTreats(copy);
+    async function removeTreat(treatId) {
+        await TreatsService.deleteTreat(treatId);
+        let updatedTreats = await TreatsService.getTreats();
+        setTreats(updatedTreats);
     }
+
     return(<>
         <p>treats view</p>
         {!isAdding && (
@@ -43,7 +43,7 @@ function Treats() {
                                 <p>{treat.description}</p>
                                 <p>cals: {treat.calories}</p>
                                 <button onClick={() => {
-                                    removeTreat(idx);
+                                    removeTreat(treat.id);
                                 }}>remove</button>
                             </li>
                         )
@@ -53,19 +53,19 @@ function Treats() {
         ) || (
         <>
             <div>name: <input type="text" onChange={(e) => setAddParams({...addParams, name: e.target.value})}></input></div>
-            <div>desc: <input type="text" onChange={(e) => setAddParams({...addParams, description: e.target.value})}></input></div>
-            <div>cals: <input type="number" onChange={(e) => setAddParams({...addParams, calories: e.target.value})}></input></div>
-            <div>tags: <input type="text" onChange={(e) => setAddParams({...addParams, tags: e.target.value})}></input></div>
+            <div>desc: <input type="text" onChange={(e) => setAddParams({...addParams, desc: e.target.value})}></input></div>
+            <div>cals: <input type="number" onChange={(e) => setAddParams({...addParams, cals: e.target.value})}></input></div>
             <button onClick={handleSubmit}>submit</button>
         </>)}
     </>);
 }
 
 const treatsLoader = async () => {
-    let treats = await MockTreatsService.getTreats();
+    // let treats = await MockTreatsService.getTreats();
+    let treats = await TreatsService.getTreats();
     return {
-        treats
-    }
+        treats,
+    };
 }
 
 export {

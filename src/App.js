@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
-import Pets from './views/pets';
+import Pets, { petsLoader } from './views/pets';
 import Treats, { treatsLoader } from './views/treats';
 
 import {
@@ -16,7 +16,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/pets',
-    element: <Pets></Pets>
+    element: <Pets></Pets>,
+    loader: petsLoader,
   },
   {
     path: '/treats',

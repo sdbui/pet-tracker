@@ -1,0 +1,23 @@
+[
+    {
+        "id":1,
+        "name":"stick",
+        "description":"for chewing and teeth health",
+        "calories":10,
+        "tags":[]
+    },
+    {
+        "id":2,
+        "name":"nubz",
+        "description":"from costco",
+        "calories":20,
+        "tags":[]
+    },
+    {
+        "id":3,
+        "name":"baconbits",
+        "description":"soft little bacon chews",
+        "calories":15,
+        "tags":[]
+    }
+]
