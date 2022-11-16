@@ -25,6 +25,18 @@ const TreatsService = {
         let json = await results.json();
         return json.message;
     },
+    updateTreat: async (params) => {
+        let url = `/api/treats/${params.id}`;
+        let results = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        let json = await results.json();
+        return json.message;
+    },
 }
 
 export default TreatsService;

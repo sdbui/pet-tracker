@@ -13,13 +13,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
-// init db
-console.log('initting db')
-
-app.get('/test', (req, res, next) => {
-    console.log('hey there dude')   
-})
-
 app.get('/api/pets', (req, res, next) => {
     let sql = 'select * from pets';
     let params = [];
@@ -68,7 +61,6 @@ app.delete('/api/treats/:id', (req, res, next) => {
 
 app.post('/api/treats', (req, res, next) => {
     let treat = req.body;
-    console.log('treat: ', treat)
     let sql = `INSERT INTO treats (
         name, description, calories
     ) VALUES (?,?,?)`;
@@ -81,6 +73,24 @@ app.post('/api/treats', (req, res, next) => {
                 message: 'success'
             })
         }
+    });
+});
+
+app.put('/api/treats/:id', (req, res) => {
+    let treat = req.body;
+    let sql = `UPDATE treats
+        SET name = ?,
+            description = ?,
+            calories = ?
+        WHERE id = ?`;
+    db.run(sql, [treat.name, treat.desc, treat.cals, req.params.id],(err) => {
+        if (err) {
+            console.log('something went wrong with PUT');
+            res.status(400);
+        }
+        res.json({
+            message: 'success',
+        });
     });
 });
 
