@@ -1,2 +1,3 @@
 # DB
 *.sqlite
+node_modules/
