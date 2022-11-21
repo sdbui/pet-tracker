@@ -17,6 +17,15 @@ import PetsService from './pets-service';
 function Pets () {
     const [pets, setPets] = useState(useLoaderData());
 
+
+    function testFeed(pet) {
+        PetsService.feedPet({
+            treatId: 1,
+            petId: pet.id,
+            amount: 1,
+        });
+    }
+
     return (
         <>
             <ul className="pet-list">
@@ -29,6 +38,7 @@ function Pets () {
                             <p>weight: {pet.weight} lbs</p>
                             <p>calories eaten: {pet.caloriesEaten}</p>
                             <p>treatsEaten: {pet.treatsEaten}</p>
+                            <button onClick={() => {testFeed(pet)}}> feed dog test!</button>
                         </li>
                     )
                 })}

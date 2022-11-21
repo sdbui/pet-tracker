@@ -53,6 +53,26 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         }
     });
 
+    console.log('creating feedings table...')
+    db.run(`CREATE TABLE feedings(
+        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        date    TEXT NOT NULL,
+        pet     INTEGER NOT NULL,
+        treat   INTEGER NOT NULL,
+        amount  INTEGER,
+        FOREIGN KEY(pet) REFERENCES pets(id),
+        FOREIGN KEY(treat) REFERENCES treats(id)
+    )`, (err) => {
+        if(err) {
+            console.log('error making table')
+            console.log(err.message)
+        }
+        else {
+            // table created
+
+        }
+    })
+
 
 });
 

@@ -13,6 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
+const util = require('util');
+const getPromisified = util.promisify(db.get.bind(db));
+
 app.get('/api/pets', (req, res, next) => {
     let sql = 'select * from pets';
     let params = [];
@@ -93,6 +96,21 @@ app.put('/api/treats/:id', (req, res) => {
         });
     });
 });
+
+app.post('/api/pets/feed', async (req, res) => {
+    let body = req.body;
+    let row = await getPromisified('SELECT DATE()');
+    let date = row['DATE()'];
+    let sql = `INSERT INTO feedings (date, pet, treat, amount)
+                VALUES (?,?,?,?)`;
+    db.run(sql, [date, body.petId, body.treatId, body.amount], (err) => {
+        if (err) {
+            console.log('couldnt feed!')
+            res.status(400)
+        }
+        res.json({ message: 'success' })
+    })     
+})
 
 // Default response for any other request
 app.get('*', function(req, res) {
