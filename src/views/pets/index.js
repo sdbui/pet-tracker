@@ -18,12 +18,14 @@ function Pets () {
     const [pets, setPets] = useState(useLoaderData());
 
 
-    function testFeed(pet) {
-        PetsService.feedPet({
+    async function testFeed(pet) {
+        await PetsService.feedPet({
             treatId: 1,
             petId: pet.id,
             amount: 1,
-        });
+        })
+        let newPets = await PetsService.getPets();
+        setPets(newPets);
     }
 
     return (
@@ -36,9 +38,9 @@ function Pets () {
                             <p>Name: {pet.name}</p>
                             <p>{pet.description}</p>
                             <p>weight: {pet.weight} lbs</p>
-                            <p>calories eaten: {pet.caloriesEaten}</p>
-                            <p>treatsEaten: {pet.treatsEaten}</p>
-                            <button onClick={() => {testFeed(pet)}}> feed dog test!</button>
+                            <p>calories eaten: {pet.totalCalories}</p>
+                            <p>treatsEaten: {pet.totalAmount}</p>
+                            <button onClick={() => {testFeed(pet)}}>Feed me a treat!</button>
                         </li>
                     )
                 })}

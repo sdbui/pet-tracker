@@ -56,7 +56,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
     console.log('creating feedings table...')
     db.run(`CREATE TABLE feedings(
         id      INTEGER PRIMARY KEY AUTOINCREMENT,
-        date    TEXT NOT NULL,
+        date    TEXT DEFAULT CURRENT_DATE NOT NULL,
         pet     INTEGER NOT NULL,
         treat   INTEGER NOT NULL,
         amount  INTEGER,
@@ -72,7 +72,6 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
 
         }
     })
-
 
 });
 

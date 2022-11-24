@@ -15,11 +15,36 @@ app.use(bodyParser.raw());
 
 const util = require('util');
 const getPromisified = util.promisify(db.get.bind(db));
+const allPromisified = util.promisify(db.all.bind(db));
 
-app.get('/api/pets', (req, res, next) => {
-    let sql = 'select * from pets';
-    let params = [];
-    db.all(sql, params, (err, rows) => {
+app.get('/api/pets', async (req, res, next) => {
+
+    // just awful long sql statement to add total calories and num treats eaten per pet
+    let getPetsAggregated = `
+        SELECT
+            pets.*,
+            CASE WHEN agg.totalAmount IS NULL THEN 0 ELSE agg.totalAmount END as totalAmount,
+            CASE WHEN agg.totalCalories IS NULL THEN 0 ELSE agg.totalCalories END as totalCalories
+        FROM pets
+        LEFT JOIN
+        (
+            SELECT 
+                feedings.pet,
+                feedings.treat,
+                SUM(feedings.amount) as totalAmount,
+                SUM(feedings.amount * treats.calories) as totalCalories
+            FROM 
+                feedings
+            INNER JOIN pets ON
+                feedings.pet=pets.id
+            INNER JOIN treats ON
+                feedings.treat = treats.id
+            GROUP BY
+                feedings.pet
+        ) as agg ON pets.id = agg.pet
+    `;
+
+    db.all(getPetsAggregated, [], (err, rows) => {
         if (err) {
             res.status(400).json({'error': err.message });
             return;
