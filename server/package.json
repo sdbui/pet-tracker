@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf db.sqlite",
-    "start": "npm run clean && node index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
