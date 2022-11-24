@@ -39,6 +39,8 @@ app.get('/api/pets', async (req, res, next) => {
                 feedings.pet=pets.id
             INNER JOIN treats ON
                 feedings.treat = treats.id
+            WHERE
+                feedings.date = CURRENT_DATE
             GROUP BY
                 feedings.pet
         ) as agg ON pets.id = agg.pet
@@ -130,6 +132,7 @@ app.post('/api/pets/feed', async (req, res) => {
                 VALUES (?,?,?,?)`;
     db.run(sql, [date, body.petId, body.treatId, body.amount], (err) => {
         if (err) {
+            console.log(err.message);
             console.log('couldnt feed!')
             res.status(400)
         }
