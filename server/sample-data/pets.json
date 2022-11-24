@@ -5,8 +5,6 @@
         "description": "Cute maltipoo big boi",
         "weight": 20,
         "treatLimit": null,
-        "caloriesEaten": 0,
-        "treatsEaten": 0,
         "pic": null
     },
     {
@@ -15,8 +13,6 @@
         "description": "Handsome shiba",
         "weight": 25,
         "treatLimit": null,
-        "caloriesEaten": 0,
-        "treatsEaten": 0,
         "pic": null
     },
     {
@@ -25,8 +21,6 @@
         "description": "Pretty shiba",
         "weight": 22,
         "treatLimit": null,
-        "caloriesEaten": 0,
-        "treatsEaten": 0,
         "pic": null
     },
     {
@@ -35,8 +29,6 @@
         "description": "Kawawa shiba",
         "weight": 20,
         "treatLimit": null,
-        "caloriesEaten": 0,
-        "treatsEaten": 0,
         "pic": null
     }
 ]
