@@ -5,6 +5,7 @@ const port = 4000;
 
 const cors = require('cors');
 app.use(cors());
+app.use(express.static('public'));
 
 const db = require('./database');
 
@@ -16,6 +17,32 @@ app.use(bodyParser.raw());
 const util = require('util');
 const getPromisified = util.promisify(db.get.bind(db));
 const allPromisified = util.promisify(db.all.bind(db));
+
+const path = require('path');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: './public/uploads',
+    filename: (req, file, cb) => {
+        let ext = path.extname(file.originalname);
+        let baseName = path.basename(file.originalname, ext).replaceAll(' ', '_');
+        const uniqueSuffix = `${Date.now()}-${Math.random() * 1E9}${ext.toLocaleLowerCase()}`;
+        cb(null, `${baseName}-${uniqueSuffix}`);
+    }
+})
+const uploadMiddleware = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        let ext = path.extname(file.originalname).toLocaleLowerCase();
+        let validexts = ['.png', '.jpg', '.gif', '.jpeg'];
+        if (!validexts.includes(ext)) {
+            return cb(new Error('Invalid filetype. Valid includes png, jpg, gif, jpeg'));
+        }
+        cb(null,true);
+    },
+    limits: {
+        fileSize: 1024 * 8000,
+    },
+});
 
 app.get('/api/pets', async (req, res, next) => {
 
@@ -138,6 +165,21 @@ app.post('/api/pets/feed', async (req, res) => {
         }
         res.json({ message: 'success' })
     })     
+});
+
+// this will be a multipart/form-data request
+app.post('/api/pets', uploadMiddleware.single('pic'),async (req, res) => {
+    let { name, description, weight } = req.body;
+    let picPath = req.file.path.replace('public', '');
+    let sql = `INSERT INTO pets (name, description, weight, pic) VALUES (?, ?, ?, ?)`
+    db.run(sql, [name, description, weight, picPath], (err) => {
+        if (err) {
+            console.log(err.message);
+            console.log('couldnt add pet');
+            res.status(400);
+        }
+        res.json({ message: 'success'});
+    });
 })
 
 // Default response for any other request

@@ -15,17 +15,33 @@ header {
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.pet-list li {
+    flex-basis: 25%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
 }
 
 .pet-list-item {
     border: 1px solid #333;
-    width: 300px;
+    min-width: 300px;
 }
 
-.profilePic {
+.profile-pic {
     height: 200px;
-    width: 200px;
-    background: black;
     border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;;
+}
+
+.profile-pic img {
+    height: 100%;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
 }
