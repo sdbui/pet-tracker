@@ -3,6 +3,7 @@ import { useLoaderData } from 'react-router-dom';
 import './styles.css';
 import PetsService from './pets-service';
 import { FeedList } from './components/feed-list';
+import AddPet from './components/add-pet';
 
 
 /** 
@@ -19,11 +20,12 @@ function Pets () {
     const [pets, setPets] = useState(useLoaderData());
     const [showFeed, setShowFeed] = useState(false);
     const [selectedPet, setSelectedPet] = useState(null);
+    const [addingPet, setAddingPet] = useState(false);
 
     const today = new Date();
     const year = today.getUTCFullYear();
     const month = today.getUTCMonth() + 1; // month is 0 indexed
-    const day = today.getUTCDay();
+    const day = today.getUTCDate();
 
     function toggleFeed(petId) {
         setSelectedPet(petId);
@@ -45,30 +47,49 @@ function Pets () {
         setSelectedPet(false);
     }
 
+    async function handleAddPet() {
+        // pet should have already been added... simply re fetch list
+        let pets = await PetsService.getPets();
+        setPets(pets);
+        setAddingPet(false);
+    }
+
     return (
         <>
             <header>
                 <div className="date">{month} / {day} / {year}</div>
             </header>
+            <button onClick={()=>{setAddingPet(true)}}>Add pet</button>
             <ul className="pet-list">
                 {pets.map((pet) => {
                     return (
-                        <li className="pet-list-item" key={pet.id}>
-                            <div className="profilePic"></div>
-                            <p>Name: {pet.name}</p>
-                            <p>{pet.description}</p>
-                            <p>weight: {pet.weight} lbs</p>
-                            <p>calories eaten: {pet.totalCalories}</p>
-                            <p>treatsEaten: {pet.totalAmount}</p>
-                            <button onClick={() => toggleFeed(pet.id)}>Feed me a treat!</button>
+                        <li key={pet.id}>
+                            <div className="pet-list-item">
+                                <div className="profile-pic">
+                                    {<img src={pet.pic || '/paw.png'}></img>}
+                                </div>
+                                <p>Name: {pet.name}</p>
+                                <p>{pet.description}</p>
+                                <p>weight: {pet.weight} lbs</p>
+                                <p>calories eaten: {pet.totalCalories}</p>
+                                <p>treatsEaten: {pet.totalAmount}</p>
+                                <button onClick={() => toggleFeed(pet.id)}>Feed me a treat!</button>
+                            </div>
                         </li>
                     )
                 })}
             </ul>
 
             {showFeed ? (
-                <div className="feed-modal">
+                <div className="modal">
                     <FeedList onSelect={handleFeed}></FeedList>
+                </div>
+            ) : null}
+
+            {addingPet ? (
+                <div className="modal">
+                    <AddPet onAdd={handleAddPet}
+                        onClose={()=>{setAddingPet(false)}}></AddPet>
                 </div>
             ) : null}
         </>
