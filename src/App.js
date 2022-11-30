@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 
 import Pets, { petsLoader } from './views/pets';
 import Treats, { treatsLoader } from './views/treats';
@@ -28,7 +28,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router}></RouterProvider>
+    <div className="App">
+      <RouterProvider router={router}></RouterProvider>
+    </div>
   );
 }
 

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
-import './styles.css';
+import './styles.scss';
 import PetsService from './pets-service';
 import { FeedList } from './components/feed-list';
-import AddPet from './components/add-pet';
+import AddPetDialog from './components/add-pet-dialog';
 
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 /** 
  * PET TREAT CALORIE LIMIT
@@ -59,7 +60,6 @@ function Pets () {
             <header>
                 <div className="date">{month} / {day} / {year}</div>
             </header>
-            <button onClick={()=>{setAddingPet(true)}}>Add pet</button>
             <ul className="pet-list">
                 {pets.map((pet) => {
                     return (
@@ -78,6 +78,11 @@ function Pets () {
                         </li>
                     )
                 })}
+                <li>
+                    <div className="pet-list-item pet-list-item--add" onClick={()=>{setAddingPet(true)}}>
+                        <AddCircleIcon/>
+                    </div>
+                </li>
             </ul>
 
             {showFeed ? (
@@ -86,12 +91,7 @@ function Pets () {
                 </div>
             ) : null}
 
-            {addingPet ? (
-                <div className="modal">
-                    <AddPet onAdd={handleAddPet}
-                        onClose={()=>{setAddingPet(false)}}></AddPet>
-                </div>
-            ) : null}
+            <AddPetDialog onAdd={handleAddPet} open={addingPet} onClose={()=>{setAddingPet(false)}}></AddPetDialog>
         </>
     )
 }
