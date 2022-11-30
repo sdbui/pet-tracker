@@ -1,0 +1,18 @@
+@use '../../../../vars.scss' as *;
+
+/*
+    Fooling around with css modules here. We CAN use kebab-cased class names
+    but in our jsx, we have to call it via styles['list-header'] instead of
+    styles.list-header. 
+
+    When using css modules, probably easier to just use camelCased classes?
+*/
+
+.petName {
+    color: $shadow-blue;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+}

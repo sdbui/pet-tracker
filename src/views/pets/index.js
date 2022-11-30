@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import './styles.scss';
 import PetsService from './pets-service';
-import { FeedList } from './components/feed-list';
 import AddPetDialog from './components/add-pet-dialog';
-
+import FeedPetDialog from './components/feed-pet-dialog';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import LunchDiningIcon from '@mui/icons-material/LunchDining';
 
 /** 
  * PET TREAT CALORIE LIMIT
@@ -20,7 +20,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 function Pets () {
     const [pets, setPets] = useState(useLoaderData());
     const [showFeed, setShowFeed] = useState(false);
-    const [selectedPet, setSelectedPet] = useState(null);
+    const [selectedPetId, setSelectedPetId] = useState(null);
+    const [feedingName, setFeedingName] = useState('');
     const [addingPet, setAddingPet] = useState(false);
 
     const today = new Date();
@@ -28,8 +29,17 @@ function Pets () {
     const month = today.getUTCMonth() + 1; // month is 0 indexed
     const day = today.getUTCDate();
 
+    useEffect(()=>{
+        let pet = pets.find((pet) => {
+            return pet.id === selectedPetId;
+        });
+        if (pet) {
+            setFeedingName(pet.name)
+        }
+    },[selectedPetId])
+
     function toggleFeed(petId) {
-        setSelectedPet(petId);
+        setSelectedPetId(petId);
         setShowFeed((prev) => {
             return !prev;
         })
@@ -39,13 +49,13 @@ function Pets () {
         // treat should have been passed in from child FeedList
         await PetsService.feedPet({
             treatId: treat.id,
-            petId: selectedPet,
+            petId: selectedPetId,
             amount: 1, // for now, only sending one treat. maybe the treatlist will dictate how many also
         })
         let newPets = await PetsService.getPets();
         setPets(newPets);
         setShowFeed(false);
-        setSelectedPet(false);
+        setSelectedPetId(null);
     }
 
     async function handleAddPet() {
@@ -68,12 +78,18 @@ function Pets () {
                                 <div className="profile-pic">
                                     {<img src={pet.pic || '/paw.png'}></img>}
                                 </div>
-                                <p>Name: {pet.name}</p>
-                                <p>{pet.description}</p>
-                                <p>weight: {pet.weight} lbs</p>
-                                <p>calories eaten: {pet.totalCalories}</p>
-                                <p>treatsEaten: {pet.totalAmount}</p>
-                                <button onClick={() => toggleFeed(pet.id)}>Feed me a treat!</button>
+                                <p className="pet-name">{pet.name}</p>
+                                <p className="pet-description">{pet.description}</p>
+                                <p>{pet.weight} lbs</p>
+                                <div className="pet-consumed">
+                                    <div>calories eaten: {pet.totalCalories}</div>
+                                    <div>treats eaten: {pet.totalAmount}</div>
+                                </div>
+                                    <div className="pet-feed" onClick={() => toggleFeed(pet.id)}>
+                                        <span>Feed</span>
+                                        <LunchDiningIcon/>
+                                        <span>Treat</span>
+                                    </div>
                             </div>
                         </li>
                     )
@@ -86,11 +102,8 @@ function Pets () {
             </ul>
 
             {showFeed ? (
-                <div className="modal">
-                    <FeedList onSelect={handleFeed}></FeedList>
-                </div>
+                <FeedPetDialog name={feedingName} onSubmit={handleFeed} open={showFeed} onClose={()=>{setShowFeed(false)}}></FeedPetDialog>
             ) : null}
-
             <AddPetDialog onAdd={handleAddPet} open={addingPet} onClose={()=>{setAddingPet(false)}}></AddPetDialog>
         </>
     )
