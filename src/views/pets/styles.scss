@@ -106,6 +106,18 @@ header {
     margin: 20px 0;
 }
 
+.pet-consumed .status {
+    &--ok {
+        color: green;
+    }
+    &--warn {
+        color: yellow;
+    }
+    &--error {
+        color: red;
+    }
+}
+
 .pet-feed {
     display: inline-flex;
     justify-content: center;

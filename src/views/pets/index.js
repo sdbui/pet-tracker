@@ -13,9 +13,11 @@ import LunchDiningIcon from '@mui/icons-material/LunchDining';
  * ex: 20lb dog should eat approx 410calories
  *      so for treats... 410 / 10 = 41 calories daily from treats
  *      
- * 
+ * FORMULA FOR CALORIES = 70 * (weight in kg)^0.75
+ * Lbs to KG = LBS / 2.205
 */
 
+const LBS_TO_KG_RATIO = 1/2.205;
 
 function Pets () {
     const [pets, setPets] = useState(useLoaderData());
@@ -72,6 +74,10 @@ function Pets () {
             </header>
             <ul className="pet-list">
                 {pets.map((pet) => {
+                    let weightInKg = pet.weight * LBS_TO_KG_RATIO;
+                    let maxCals = maxTreatCals(weightInKg);
+                    let diff = maxCals - pet.totalCalories;
+                    let status = diff < 0 ? 'error' : 'ok';
                     return (
                         <li key={pet.id}>
                             <div className="pet-list-item">
@@ -82,7 +88,7 @@ function Pets () {
                                 <p className="pet-description">{pet.description}</p>
                                 <p>{pet.weight} lbs</p>
                                 <div className="pet-consumed">
-                                    <div>calories eaten: {pet.totalCalories}</div>
+                                    <div className={`status--${status}`}>calories eaten: {pet.totalCalories}</div>
                                     <div>treats eaten: {pet.totalAmount}</div>
                                 </div>
                                     <div className="pet-feed" onClick={() => toggleFeed(pet.id)}>
@@ -107,6 +113,12 @@ function Pets () {
             <AddPetDialog onAdd={handleAddPet} open={addingPet} onClose={()=>{setAddingPet(false)}}></AddPetDialog>
         </>
     )
+}
+
+// recommended treat is 10% of total day
+function maxTreatCals(weightInKg) {
+    let totalDayCals = 70 * (weightInKg**(3/4)); // https://vet.osu.edu/vmc/companion/our-services/nutrition-support-service/basic-calorie-calculator
+    return totalDayCals / 10; // https://www.akc.org/expert-advice/nutrition/how-many-treats-can-dog-have/
 }
 
 const petsLoader = async () => {
