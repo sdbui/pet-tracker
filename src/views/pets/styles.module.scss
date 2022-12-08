@@ -1,6 +1,6 @@
 @use '../../vars' as *;
 
-header {
+.pets-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -106,7 +106,8 @@ header {
     margin: 20px 0;
 }
 
-.pet-consumed .status {
+.status {
+    color: black;
     &--ok {
         color: green;
     }

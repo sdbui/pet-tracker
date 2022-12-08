@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
-import './styles.scss';
+import styles from './styles.module.scss';
 import PetsService from './pets-service';
 import AddPetDialog from './components/add-pet-dialog';
 import FeedPetDialog from './components/feed-pet-dialog';
@@ -69,10 +69,10 @@ function Pets () {
 
     return (
         <>
-            <header>
-                <div className="date">{month} / {day} / {year}</div>
+            <header className={styles['pets-header']}>
+                <div className={styles.date}>{month} / {day} / {year}</div>
             </header>
-            <ul className="pet-list">
+            <ul className={styles['pet-list']}>
                 {pets.map((pet) => {
                     let weightInKg = pet.weight * LBS_TO_KG_RATIO;
                     let maxCals = maxTreatCals(weightInKg);
@@ -80,18 +80,18 @@ function Pets () {
                     let status = diff < 0 ? 'error' : 'ok';
                     return (
                         <li key={pet.id}>
-                            <div className="pet-list-item">
-                                <div className="profile-pic">
+                            <div className={styles['pet-list-item']}>
+                                <div className={styles['profile-pic']}>
                                     {<img src={pet.pic || '/paw.png'}></img>}
                                 </div>
-                                <p className="pet-name">{pet.name}</p>
-                                <p className="pet-description">{pet.description}</p>
+                                <p className={styles['pet-name']}>{pet.name}</p>
+                                <p className={styles['pet-description']}>{pet.description}</p>
                                 <p>{pet.weight} lbs</p>
-                                <div className="pet-consumed">
-                                    <div className={`status--${status}`}>calories eaten: {pet.totalCalories}</div>
+                                <div className={styles['pet-consumed']}>
+                                    <div className={styles[`status--${status}`]}>calories eaten: {pet.totalCalories}</div>
                                     <div>treats eaten: {pet.totalAmount}</div>
                                 </div>
-                                    <div className="pet-feed" onClick={() => toggleFeed(pet.id)}>
+                                    <div className={styles['pet-feed']} onClick={() => toggleFeed(pet.id)}>
                                         <span>Feed</span>
                                         <LunchDiningIcon/>
                                         <span>Treat</span>
@@ -101,7 +101,7 @@ function Pets () {
                     )
                 })}
                 <li>
-                    <div className="pet-list-item pet-list-item--add" onClick={()=>{setAddingPet(true)}}>
+                    <div className={`${styles['pet-list-item']} ${styles['pet-list-item--add']}`} onClick={()=>{setAddingPet(true)}}>
                         <AddCircleIcon/>
                     </div>
                 </li>
