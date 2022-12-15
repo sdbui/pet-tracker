@@ -1,5 +1,12 @@
 @import 'vars';
 
+$APP-BAR-HEIGHT: 64px;
+
 .App {
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: auto;
   background: $light-blue;
+  display: flex;
+  flex-direction: column;
 }
