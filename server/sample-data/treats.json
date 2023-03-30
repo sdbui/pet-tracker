@@ -1,23 +1,17 @@
 [
     {
-        "id":1,
         "name":"Stick",
         "description":"For chewing and teeth health",
-        "calories":10,
-        "tags":[]
+        "calories":10
     },
     {
-        "id":2,
         "name":"Nubz",
         "description":"Chew treat from Costco",
-        "calories":20,
-        "tags":[]
+        "calories":20
     },
     {
-        "id":3,
         "name":"Bacon Bits",
         "description":"Soft little bacon chews",
-        "calories":15,
-        "tags":[]
+        "calories":15
     }
 ]

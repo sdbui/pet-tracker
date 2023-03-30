@@ -1,27 +1,23 @@
 [
     {
-        "id": 1,
         "name": "Boo",
         "description": "Cute maltipoo",
         "weight": 20,
         "pic": null
     },
     {
-        "id": 2,
         "name": "Macchi",
         "description": "Handsome shiba",
         "weight": 35,
         "pic": null
     },
     {
-        "id": 3,
         "name": "Char",
         "description": "Pretty shiba",
         "weight": 27,
         "pic": null
     },
     {
-        "id": 4,
         "name": "Koko",
         "description": "Kawawa shiba",
         "weight": 25,

@@ -7,16 +7,20 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.static('public'));
 
-const db = require('./database');
+const db = require('./models');
+// ASSOCIATIONS
+db.Feeding.belongsTo(db.Pet, { foreignKey: 'petId'});
+db.Feeding.belongsTo(db.Treat, { foreignKey: 'treatId'});
+db.sequelize.sync().then(res => {
+    console.log('db is ready');
+}).catch(e => {
+    console.error('db error', e)
+});
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
-
-const util = require('util');
-const getPromisified = util.promisify(db.get.bind(db));
-const allPromisified = util.promisify(db.all.bind(db));
 
 const path = require('path');
 const multer = require('multer');
@@ -44,10 +48,17 @@ const uploadMiddleware = multer({
     },
 });
 
+/**
+ * TODO: look into getting rid of this long raw sql statement
+ * maybe sub queries???
+ * https://sequelize.org/docs/v6/other-topics/sub-queries/
+ * still have to use raw sql in literal though...
+ */
 app.get('/api/pets', async (req, res, next) => {
-
-    // just awful long sql statement to add total calories and num treats eaten per pet
-    let getPetsAggregated = `
+    let today = new Date().toLocaleDateString();
+    // previous long raw sql query that the above replaced... for reference
+    try {
+        const [pets, metadata] = await db.sequelize.query(`
         SELECT
             pets.*,
             CASE WHEN agg.totalAmount IS NULL THEN 0 ELSE agg.totalAmount END as totalAmount,
@@ -56,141 +67,163 @@ app.get('/api/pets', async (req, res, next) => {
         LEFT JOIN
         (
             SELECT 
-                feedings.pet,
-                feedings.treat,
+                feedings.petId,
+                feedings.treatId,
                 SUM(feedings.amount) as totalAmount,
                 SUM(feedings.amount * treats.calories) as totalCalories
             FROM 
                 feedings
             INNER JOIN pets ON
-                feedings.pet=pets.id
+                feedings.petId=pets.id
             INNER JOIN treats ON
-                feedings.treat = treats.id
+                feedings.treatId = treats.id
             WHERE
-                feedings.date = CURRENT_DATE
+                feedings.date = "${today}"
             GROUP BY
-                feedings.pet
-        ) as agg ON pets.id = agg.pet
-    `;
+                feedings.petId
+        ) as agg ON pets.id = agg.petId;`);
+        res.status(200).json({message: 'success', data: pets })
+    } catch (err) {
+        console.log(err)
+        res.status(400).send('something wrong')
+    }
+});
 
-    db.all(getPetsAggregated, [], (err, rows) => {
-        if (err) {
-            res.status(400).json({'error': err.message });
-            return;
-        }
-        res.json({
+app.get('/api/treats', async (req, res, next) => {
+    try {
+        let response = await db.Treat.findAll();
+        res.status(200).json({
             message: 'success',
-            data: rows,
+            data: response,
         })
-    })
-});
 
-app.get('/api/treats', (req, res, next) => {
-    let sql = 'select * from treats';
-    let params = [];
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).json({'error': err.message });
-            return;
-        }
-        res.json({
-            message: 'success',
-            data: rows,
-        })
-    })
-});
+    } catch (e) {
+        res.json({ status: 400, message: 'something wrong'})
+    }
+})
 
-app.delete('/api/treats/:id', (req, res, next) => {
-    let id = req.params.id;
-    let sql = `DELETE FROM treats WHERE id='${id}'`;
-    db.run(sql, (err) => {
-        if (err) {
-            console.log('could not delete: ', id);
-            res.status(400)
+app.delete('/api/treats/:id', async (req, res, next) => {
+    try {
+        let treat = await db.Treat.findOne({ where: {id : req.params.id}})
+        if (treat) {
+            await treat.destroy();
+            res.status(201).json({ message: 'successfully deleted'});
         } else {
-            res.json({
-                message: 'success',
-            });
-
+            res.status(400).send('Treat id not found')
         }
-    })
-});
+    } catch (err) {
+        console.error(err)
+        res.status(400).send('something wrong')
+    }
+})
 
-app.post('/api/treats', (req, res, next) => {
-    let treat = req.body;
-    let sql = `INSERT INTO treats (
-        name, description, calories
-    ) VALUES (?,?,?)`;
-    db.run(sql, [treat.name, treat.desc, treat.cals], (err) => {
-        if (err) {
-            console.log('something went wrong with POST')
-            res.status(400);
-        } else {
-            res.json({
-                message: 'success'
-            })
-        }
-    });
-});
+app.post('/api/treats', async (req, res, next) => {
+    let { name, desc, cals } = req.body;
+    let date = new Date().toLocaleDateString();
 
-app.put('/api/treats/:id', (req, res) => {
-    let treat = req.body;
-    let sql = `UPDATE treats
-        SET name = ?,
-            description = ?,
-            calories = ?
-        WHERE id = ?`;
-    db.run(sql, [treat.name, treat.desc, treat.cals, req.params.id],(err) => {
-        if (err) {
-            console.log('something went wrong with PUT');
-            res.status(400);
-        }
-        res.json({
-            message: 'success',
+    try {
+        await db.Treat.create({
+            name,
+            date,
+            description: desc,
+            calories: cals,
         });
-    });
-});
+        res.status(201).json({
+            message: 'success!'
+        });
+    } catch (err) {
+        res.json({
+            status: 400,
+            message: 'error somewhere'
+        });
+    }
+})
+
+app.put('/api/treats/:id', async (req, res) => {
+    let { name, desc, cals } = req.body;
+    try {
+        let treat = await db.Treat.findOne({ where: {id: req.params.id}});
+        if (treat) {
+            treat.set({
+                name,
+                description: desc,
+                calories: cals
+            });
+            await treat.save();
+            res.status(201).json({ message: 'updated!'})
+        } else {
+            // no treat found with this id
+            res.status(401).send('No treat found with id: ', req.params.id);
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(400).send('something wrong');
+    }
+    
+
+})
 
 app.post('/api/pets/feed', async (req, res) => {
-    let body = req.body;
-    let row = await getPromisified('SELECT DATE()');
-    let date = row['DATE()'];
-    let sql = `INSERT INTO feedings (date, pet, treat, amount)
-                VALUES (?,?,?,?)`;
-    db.run(sql, [date, body.petId, body.treatId, body.amount], (err) => {
-        if (err) {
-            console.log(err.message);
-            console.log('couldnt feed!')
-            res.status(400)
-        }
-        res.json({ message: 'success' })
-    })     
+    let { petId, treatId, amount } = req.body;
+    let date = new Date().toLocaleDateString();
+    try {
+        await db.Feeding.create({
+            petId,
+            treatId,
+            amount,
+            date,
+        });
+        res.status(201).json({
+            message: 'success!'
+        })
+    } catch (err) {
+        console.error(err);
+        res.json({ status: 400, message: 'oops!' });
+    }
+})
+
+app.post('/api/pets', uploadMiddleware.single('pic'), async (req, res) => {
+    let {name, description, weight } = req.body;
+    let pic = req.file.path.replace('public', '');
+    let date = new Date().toLocaleDateString();
+    try {
+        await db.Pet.create({
+            name,
+            description,
+            weight,
+            pic,
+            date,
+        });
+        res.status(201).json({ message: 'success'})
+    } catch (err) {
+        res.status(400).send('could not create pet')
+    }
 });
 
-// this will be a multipart/form-data request
-app.post('/api/pets', uploadMiddleware.single('pic'),async (req, res) => {
+app.post('/api/pets', async (req, res, next) => {
     let { name, description, weight } = req.body;
-    let picPath = req.file.path.replace('public', '');
-    let sql = `INSERT INTO pets (name, description, weight, pic) VALUES (?, ?, ?, ?)`
-    db.run(sql, [name, description, weight, picPath], (err) => {
-        if (err) {
-            console.log(err.message);
-            console.log('couldnt add pet');
-            res.status(400);
-        }
+    let picPath = req.file?.path?.replace('public', '') || '';
+    try {
+        await db.Pet.create({ 
+            name,
+            description,
+            weight,
+            pic: picPath,
+        });
         res.json({ message: 'success'});
-    });
-})
+    } catch (err) {
+        console.error(err);
+        res.json({
+            status: 400,
+            message: 'Could not save pet'
+        });
+    }
+});
 
 // Default response for any other request
 app.get('*', function(req, res) {
     res.status(404).send('Nothing to see here...')
 })
-
-
-
-
-
 
 const server = http.createServer(app);
 server.listen(port, () => {
