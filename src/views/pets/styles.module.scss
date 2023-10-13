@@ -12,10 +12,6 @@
     padding: 25px 0;
 }
 
-.test {
-    background: #999;
-}
-
 .pet-list {
     list-style-type: none;
     padding: 0;
@@ -35,7 +31,7 @@
     svg {
         height: 150px;
         width: 150px;
-        fill: $dark-blue;
+        fill: white;
     }
 }
 
@@ -114,11 +110,5 @@
     svg {
         height: 50px;
         width: 50px;
-    }
-
-    &:hover {
-        color: $shadow-blue;
-        border: 3px solid $shadow-blue;
-        border-radius: 25px;
     }
 }
