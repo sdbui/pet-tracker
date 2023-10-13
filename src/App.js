@@ -6,23 +6,37 @@ import router from './router';
 import Typography from '@mui/joy/Typography';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import Link from '@mui/joy/Link';
-import {CssVarsProvider} from '@mui/joy/styles';
+import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import Sheet from '@mui/joy/Sheet';
+import CssBaseline from '@mui/joy/CssBaseline';
+import Button from '@mui/joy/Button';
 
 function App() {
   return (
-    <CssVarsProvider>
-      <div className="App">
-        <PetAppBar></PetAppBar>
-        <RouterProvider router={router}></RouterProvider>
-      </div>
+    <CssVarsProvider defaultMode='dark'>
+      <CssBaseline/>
+      <Sheet variant="soft">
+        <div className="App">
+          <PetAppBar></PetAppBar>
+          <RouterProvider router={router}></RouterProvider>
+        </div>
+        
+      </Sheet>
 
     </CssVarsProvider>
   );
 }
 
 function PetAppBar() {
+
+  const { mode, setMode } = useColorScheme();
+
+  function toggleColorScheme() {
+    setMode(mode=== 'dark' ? 'light':'dark');
+  }
+
   return (
-    <div>
+    <Sheet sx={{display: 'flex', alignItems: 'center', padding: '10px'}}>
       <Typography>
         PET TRACKER
       </Typography>
@@ -34,7 +48,10 @@ function PetAppBar() {
           <Typography>TREATS</Typography>
         </Link>
       </Breadcrumbs>
-    </div>
+      <Button variant="solid" sx={{marginLeft: 'auto'}} onClick={toggleColorScheme}>
+        {mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+      </Button>
+    </Sheet>
   )
 }
 
