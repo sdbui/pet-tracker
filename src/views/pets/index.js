@@ -5,7 +5,10 @@ import PetsService from './pets-service';
 import AddPetDialog from './components/add-pet-dialog';
 import FeedPetDialog from './components/feed-pet-dialog';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import { CssVarsProvider } from '@mui/joy/styles';
+
+import Card from '@mui/joy/Card';
+import Button from '@mui/joy/Button';
 
 /** 
  * PET TREAT CALORIE LIMIT
@@ -80,7 +83,7 @@ function Pets () {
                     let status = diff < 0 ? 'error' : 'ok';
                     return (
                         <li key={pet.id}>
-                            <div className={styles['pet-list-item']}>
+                            <Card sx={{ width: 300 }}>
                                 <div className={styles['profile-pic']}>
                                     {<img src={pet.pic || '/paw.png'}></img>}
                                 </div>
@@ -91,19 +94,27 @@ function Pets () {
                                     <div className={styles[`status--${status}`]}>calories eaten: {pet.totalCalories}</div>
                                     <div>treats eaten: {pet.totalAmount}</div>
                                 </div>
-                                    <div className={styles['pet-feed']} onClick={() => toggleFeed(pet.id)}>
-                                        <span>Feed</span>
-                                        <LunchDiningIcon/>
-                                        <span>Treat</span>
-                                    </div>
-                            </div>
+                                <Button
+                                    variant="solid"
+                                    size="lg"
+                                    color={status === 'error' ? 'danger' : 'primary'} 
+                                    aria-label="Feed Pet"
+                                    onClick={() => toggleFeed(pet.id)}
+                                    sx={{ display: 'flex', width: 200, alignSelf: 'center'}}
+                                >
+                                    Feed a Treat
+                                </Button>
+        
+                            </Card>
                         </li>
                     )
                 })}
                 <li>
-                    <div className={`${styles['pet-list-item']} ${styles['pet-list-item--add']}`} onClick={()=>{setAddingPet(true)}}>
-                        <AddCircleIcon/>
-                    </div>
+                    <Card sx={{ width: 300, height: 400}}>
+                        <div className={styles['add-card']}onClick={()=>{setAddingPet(true)}}>
+                            <AddCircleIcon/>
+                        </div>
+                    </Card>
                 </li>
             </ul>
 

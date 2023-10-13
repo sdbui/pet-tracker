@@ -1,13 +1,17 @@
-import DialogContent from '@mui/material/DialogContent';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useReducer } from 'react';
 import TreatsService from '../../../treats/treats-service';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import styles from './styles.module.scss';
+
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
+import Typography from '@mui/joy/Typography';
+
 
 
 const feedReducer = (state, action) => {
@@ -47,29 +51,32 @@ const FeedPetDialog = ({open, onClose, onSubmit, name}) => {
     return (
         <>
             {feedState.loading ? (<div>loading...</div>) : (
-                <Dialog open={open} onClose={onClose}>
-                    <DialogContent>
-                        <DialogTitle>Feeding <span className={styles.petName}>{name}</span> A Treat</DialogTitle>
-                        <List>
+                <Modal open={open} onClose={onClose}>
+                    <ModalDialog>
+                        <DialogContent>
+                            <DialogTitle>Feeding <span className={styles.petName}>{name}</span> A Treat</DialogTitle>
                             <div className={styles['list-header']}>
-                                <div>Treat</div>
-                                <div>Calories</div>
+                                    <div>Treat</div>
+                                    <div>Calories</div>
                             </div>
-                            {feedState.list.map((treat, idx)=>(
-                                <ListItem key={idx}>
-                                    <ListItemButton
-                                      sx={{padding: '0 0'}}
-                                      onClick={()=> onSubmit(treat)} >
-                                        <ListItemText
-                                          sx={{ pr: '10px'}}
-                                          primary={treat?.name} secondary={treat?.description}></ListItemText>
-                                        <p>{treat.calories}</p>
-                                    </ListItemButton>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </DialogContent>
-                </Dialog>
+                            <List>
+                                {feedState.list.map((treat, idx)=>(
+                                    <ListItem key={idx}>
+                                        <ListItemButton
+                                            sx={{padding: '0 0'}}
+                                            onClick={()=> onSubmit(treat)} >
+                                            <ListItemContent>
+                                                <Typography>{treat?.name}</Typography>
+                                                <Typography>{treat?.description}</Typography>
+                                            </ListItemContent>
+                                            <p>{treat.calories}</p>
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </DialogContent>
+                    </ModalDialog>
+                </Modal>
             )}
         </>
     )

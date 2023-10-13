@@ -1,11 +1,12 @@
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
 import PetsService from '../../pets-service';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogActions from '@mui/joy/DialogActions';
+import DialogContent from '@mui/joy/DialogContent';
+import Button from '@mui/joy/Button';
+import Input from '@mui/joy/Input';
 
 const defaultAddForm = {
     name: '',
@@ -33,54 +34,47 @@ const AddPetDialog = ({open, onClose, onAdd}) => {
         setAddForm((prev)=>({...prev, description: e.target.value}))
     }
     function onWeightChange(e) {
+        console.log('change?')
         setAddForm((prev) => ({...prev, weight: e.target.value}))
     }
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Add New Pet</DialogTitle>
-            <DialogContent>
-                <TextField 
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    onChange={onNameChange}
-                />
-                <TextField 
-                    margin="dense"
-                    id="description"
-                    label="description"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    onChange={onDescriptionChange}
-                />
-                <TextField 
-                    margin="dense"
-                    id="weight"
-                    label="weight"
-                    type="number"
-                    variant="standard"
-                    onChange={onWeightChange}
-                />
-                <TextField 
-                    margin="dense"
-                    id="pic"
-                    label="pic"
-                    type="file"
-                    variant="standard"
-                    onChange={onFileChange}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={submit}>Submit</Button>
-            </DialogActions>
-        </Dialog>
+        <Modal open={open} onClose={onClose}>
+            <ModalDialog>
+                <DialogTitle>Add New Pet</DialogTitle>
+                <DialogContent>
+                    <Input 
+                        autoFocus
+                        id="name"
+                        label="name"
+                        type="text"
+                        onChange={onNameChange}
+                    />
+                    <Input 
+                        id="description"
+                        label="description"
+                        type="text"
+                        onChange={onDescriptionChange}
+                    />
+                    <Input 
+                        id="weight"
+                        label="weight"
+                        type="number"
+                        onChange={onWeightChange}
+                    />
+                    <Input 
+                        id="pic"
+                        label="pic"
+                        type="file"
+                        onChange={onFileChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={submit}>Submit</Button>
+                </DialogActions>
+            </ModalDialog>
+        </Modal>
     )
 }
 

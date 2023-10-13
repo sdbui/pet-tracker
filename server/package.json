@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf db2.sqlite && rm -rf ./public/uploads && rm -rf dbtest.sqlite",
-    "start": "node index.js"
+    "start": "node index.js",
+    "seed": "sequelize-cli db:seed:all"
   },
   "author": "",
   "license": "ISC",

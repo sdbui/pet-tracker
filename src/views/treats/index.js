@@ -2,14 +2,16 @@ import styles from './styles.module.scss';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import TreatsService from './treats-service';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import { ListItemText } from '@mui/material';
 import EditTreatDialog from './components/edit-treat-dialog';
 import Edit from '@mui/icons-material/Edit';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
+import { Typography } from '@mui/joy';
 
 function Treats() {
     const {
@@ -39,16 +41,14 @@ function Treats() {
 
     return(
         <div className={styles.container}>
-            <List sx={{ 'max-width': '700px'}}>
+            <List sx={{ 'max-width': '700px'}} className={styles.list}>
                 {treats.map((treat) => {
                     return (
                         <ListItem key={treat.id} className={styles.listItem}>
-                            <ListItemText sx={{
-                                'min-width': '300px'
-                            }}
-                                primary={treat?.name}
-                                secondary={treat?.description}
-                            ></ListItemText>
+                            <ListItemContent>
+                                <Typography>{treat?.name}</Typography>
+                                <Typography>{treat?.description}</Typography>
+                            </ListItemContent>
                             <p className={styles.calories}>{treat.calories} cals</p>
                             <div className={styles.treatActions}>
                                 <Edit onClick={() => {editTreat(treat)}}/>
