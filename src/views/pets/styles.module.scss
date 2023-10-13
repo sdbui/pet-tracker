@@ -12,6 +12,10 @@
     padding: 25px 0;
 }
 
+.test {
+    background: #999;
+}
+
 .pet-list {
     list-style-type: none;
     padding: 0;
@@ -27,38 +31,14 @@
     margin-bottom: 50px;
 }
 
-.pet-list-item {
-    // border: 2px solid #333;
-    min-width: 300px;
-    max-width: 300px;
-    padding: 10px 20px;
-    height: 400px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px 0px #aaa;
-    background: $light-peach;
-    color: $dark-blue;
-    text-align: center;
-
-    &--add {
-        border: 3px solid $shadow-blue;
-        background: transparent;
-        opacity: 0.5;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        svg {
-            height: 150px;
-            width: 150px;
-            fill: $dark-blue;
-        }
-
-        &:hover {
-            opacity: 1;
-        }
+.add-card {
+    svg {
+        height: 150px;
+        width: 150px;
+        fill: $dark-blue;
     }
 }
+
 
 .profile-pic {
     height: 175px;

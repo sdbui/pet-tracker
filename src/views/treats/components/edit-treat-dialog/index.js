@@ -1,12 +1,13 @@
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/joy/Button';
 import { useState } from 'react';
 import TreatsService from '../../treats-service';
 
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import DialogActions from '@mui/joy/DialogActions';
+import DialogContent from '@mui/joy/DialogContent';
+import DialogTitle from '@mui/joy/DialogTitle';
+import Input from '@mui/joy/Input';
 /**
  * This component will handle both Edit and Add of treats
  */
@@ -41,43 +42,43 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
     }
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>{treat.id ? 'Editing' : 'Adding'} a Treat</DialogTitle>
-            <DialogContent>
-                <TextField
-                    autoFocus
-                    value={addForm.name}
-                    id="name"
-                    label="name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    onChange={onNameChange}
-                ></TextField>
-                <TextField
-                    value={addForm.desc}
-                    id="description"
-                    label="description"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    onChange={onDescriptionChange}
-                ></TextField>
-                <TextField
-                    value={addForm.cals}
-                    id="calories"
-                    label="calories"
-                    type="number"
-                    fullWidth
-                    variant="standard"
-                    onChange={onCaloriesChange}
-                ></TextField>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
-            </DialogActions>
-        </Dialog>
+        <Modal open={open} onClose={onClose}>
+            <ModalDialog>
+                <DialogTitle>{treat.id ? 'Editing' : 'Adding'} a Treat</DialogTitle>
+                <DialogContent>
+                    <Input
+                        autoFocus
+                        value={addForm.name}
+                        id="name"
+                        label="name"
+                        type="text"
+                        placeholder="Enter name"
+                        onChange={onNameChange}
+                    ></Input>
+                    <Input
+                        value={addForm.desc}
+                        id="description"
+                        label="description"
+                        type="text"
+                        placeholder="Enter description"
+                        onChange={onDescriptionChange}
+                    ></Input>
+                    <Input
+                        value={addForm.cals}
+                        id="calories"
+                        label="calories"
+                        type="number"
+                        placeholder="Enter calories"
+                        onChange={onCaloriesChange}
+                    ></Input>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={handleSubmit}>Submit</Button>
+                </DialogActions>
+
+            </ModalDialog>
+        </Modal>
     )
 
 }

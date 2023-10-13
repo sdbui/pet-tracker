@@ -17,6 +17,11 @@
     .calories {
         margin: 0 50px;
     }
+    background: #fff;
+
+    &:not(:first-child) {
+        border-top: 1px solid #ddd;
+    }
 }
 .listItemText {
     min-width: 350px !important;
