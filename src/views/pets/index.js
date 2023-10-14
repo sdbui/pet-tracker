@@ -1,14 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import styles from './styles.module.scss';
 import PetsService from './pets-service';
 import AddPetDialog from './components/add-pet-dialog';
 import FeedPetDialog from './components/feed-pet-dialog';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { CssVarsProvider } from '@mui/joy/styles';
 
 import Card from '@mui/joy/Card';
 import Button from '@mui/joy/Button';
+
+import Grid from '@mui/joy/Grid';
+import { Typography, useColorScheme } from '@mui/joy';
+import Box from '@mui/system/Box';
+import Stack from '@mui/joy/Stack';
 
 /** 
  * PET TREAT CALORIE LIMIT
@@ -23,6 +27,7 @@ import Button from '@mui/joy/Button';
 const LBS_TO_KG_RATIO = 1/2.205;
 
 function Pets () {
+    const {mode} = useColorScheme();
     const [pets, setPets] = useState(useLoaderData());
     const [showFeed, setShowFeed] = useState(false);
     const [selectedPetId, setSelectedPetId] = useState(null);
@@ -73,51 +78,61 @@ function Pets () {
     return (
         <>
             <header className={styles['pets-header']}>
-                <div className={styles.date}>{month} / {day} / {year}</div>
+                <Typography fontSize="3rem">{month} / {day} / {year}</Typography>
             </header>
-            <ul className={styles['pet-list']}>
+            <Grid container justifyContent="center" spacing={4}>
                 {pets.map((pet) => {
                     let weightInKg = pet.weight * LBS_TO_KG_RATIO;
                     let maxCals = maxTreatCals(weightInKg);
                     let diff = maxCals - pet.totalCalories;
                     let status = diff < 0 ? 'error' : 'ok';
                     return (
-                        <li key={pet.id}>
-                            <Card sx={{ width: 300 }}>
-                                <div className={styles['profile-pic']}>
-                                    {<img src={pet.pic || '/paw.png'}></img>}
-                                </div>
-                                <p className={styles['pet-name']}>{pet.name}</p>
-                                <p className={styles['pet-description']}>{pet.description}</p>
-                                <p>{pet.weight} lbs</p>
-                                <div className={styles['pet-consumed']}>
-                                    <div className={styles[`status--${status}`]}>calories eaten: {pet.totalCalories}</div>
-                                    <div>treats eaten: {pet.totalAmount}</div>
-                                </div>
-                                <Button
-                                    variant="solid"
-                                    size="lg"
-                                    color={status === 'error' ? 'danger' : 'primary'} 
-                                    aria-label="Feed Pet"
-                                    onClick={() => toggleFeed(pet.id)}
-                                    sx={{ display: 'flex', width: 200, alignSelf: 'center'}}
-                                >
-                                    Feed a Treat
-                                </Button>
-        
-                            </Card>
-                        </li>
+                            <Grid key={pet.name}>
+                                <Card sx={{ width: 320 }} key={pet.name}>
+                                    <div className={styles['profile-pic']}>
+                                        {<img src={pet.pic || '/paw.png'}></img>}
+                                    </div>
+                                    <Box sx={{display: 'flex', justifyContent:'space-between', alignItems: 'end'}}>
+                                        <Typography level="h2">{pet.name}</Typography>
+                                        <Typography level="title-md">{pet.weight} lbs</Typography>
+                                    </Box>
+                                    <Box sx={{height: '50px', display: 'flex', alignItems:'center', justifyContent:'center', textAlign: 'center'}}>
+                                        <span className={styles['pet-description']}>{pet.description}</span>
+                                    </Box>
+                                    <div className={styles['pet-consumed']}>
+                                        <Stack>
+                                            <Typography level="title-md">Treats</Typography>
+                                            <Typography level="h3">{pet.totalAmount}</Typography>
+                                        </Stack>
+                                        <Stack>
+                                            <Typography level="title-md" color={status === 'error' ? 'danger' : 'success'}>Calories</Typography>
+                                            <Typography color={status === 'error' ? 'danger' : 'success'} level="h3">{pet.totalCalories}</Typography>
+                                        </Stack>
+                                    </div>
+                                    <Button
+                                        variant="solid"
+                                        size="lg"
+                                        color={status === 'error' ? 'danger' : 'primary'} 
+                                        aria-label="Feed Pet"
+                                        onClick={() => toggleFeed(pet.id)}
+                                        sx={{ display: 'flex', width: 200, alignSelf: 'center'}}
+                                    >
+                                        Feed a Treat
+                                    </Button>
+                                </Card>
+
+                            </Grid>
                     )
                 })}
-                <li>
-                    <Card sx={{ width: 300, height: 400}}>
-                        <div className={styles['add-card']}onClick={()=>{setAddingPet(true)}}>
+                <Grid>
+                    <Card sx={{ width: 320, height: '100%', alignItems:'center', justifyContent:'center'}}>
+                        <div className={`${styles['add-card']} ${mode === 'light' ? styles['light'] : ''}`}onClick={()=>{setAddingPet(true)}}>
                             <AddCircleIcon/>
                         </div>
                     </Card>
-                </li>
-            </ul>
-
+                </Grid>
+ 
+            </Grid>
             {showFeed ? (
                 <FeedPetDialog name={feedingName} onSubmit={handleFeed} open={showFeed} onClose={()=>{setShowFeed(false)}}></FeedPetDialog>
             ) : null}

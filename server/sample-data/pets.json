@@ -1,26 +1,20 @@
 [
     {
-        "name": "Boo",
-        "description": "Cute maltipoo",
-        "weight": 20,
-        "pic": null
-    },
-    {
         "name": "Macchi",
         "description": "Handsome shiba",
         "weight": 35,
-        "pic": null
+        "pic": "/samplepics/macchi.jpg"
     },
     {
         "name": "Char",
         "description": "Pretty shiba",
         "weight": 27,
-        "pic": null
+        "pic": "/samplepics/char.jpg"
     },
     {
-        "name": "Koko",
+        "name": "Coco",
         "description": "Kawawa shiba",
         "weight": 25,
-        "pic": null
+        "pic": "/samplepics/coco.jpg"
     }
 ]

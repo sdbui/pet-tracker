@@ -11,9 +11,12 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
-import { Typography } from '@mui/joy';
+import { ListDivider, Typography } from '@mui/joy';
+import Sheet from '@mui/joy/Sheet';
+import { useColorScheme } from '@mui/joy';
 
 function Treats() {
+    const {mode} = useColorScheme();
     const {
         treats: defaultTreats,
     } = useLoaderData();
@@ -39,29 +42,35 @@ function Treats() {
         setIsAdding(true);
     }
 
+    function ListItemWithDivider ({treat, hideDivider=false}) {
+        return (<>
+            <ListItem key={treat.id} className={styles.listItem}>
+                <ListItemContent>
+                    <Typography level="title-lg">{treat?.name}</Typography>
+                    <Typography level="body-sm">{treat?.description}</Typography>
+                </ListItemContent>
+                <p className={styles.calories}>{treat.calories} cals</p>
+                <div className={styles.treatActions}>
+                    <Edit onClick={() => {editTreat(treat)}}/>
+                    <DeleteForever onClick={() => {removeTreat(treat.id)}}/>
+                </div>
+            </ListItem>
+            {hideDivider ? '': <ListDivider inset="gutter"/>}
+        </>)
+    }
+
     return(
         <div className={styles.container}>
-            <List sx={{ 'max-width': '700px'}} className={styles.list}>
-                {treats.map((treat) => {
+            <List sx={{ maxWidth: '650px', marginTop: '50px'}} variant="outlined">
+                {treats.map((treat, idx) => {
+                    let hideDivider = idx === treats.length - 1;
                     return (
-                        <ListItem key={treat.id} className={styles.listItem}>
-                            <ListItemContent>
-                                <Typography>{treat?.name}</Typography>
-                                <Typography>{treat?.description}</Typography>
-                            </ListItemContent>
-                            <p className={styles.calories}>{treat.calories} cals</p>
-                            <div className={styles.treatActions}>
-                                <Edit onClick={() => {editTreat(treat)}}/>
-                                <DeleteForever onClick={() => {removeTreat(treat.id)}}/>
-                            </div>
-                        </ListItem>
+                        <ListItemWithDivider treat={treat} key={treat.id} hideDivider={hideDivider}></ListItemWithDivider>
                     )
                 })}
-                    <ListItemButton onClick={() => setIsAdding(true)}
-                        sx={{display: 'flex', 'justify-content': 'center'}}>
-                        <AddCircleIcon />
-                    </ListItemButton>
             </List>
+                <AddCircleIcon sx={{height: '50px', width: '50px', marginTop: '10px'}} className={`${styles.addTreatIcon} ${mode === 'light' ? styles.light : ''}`}
+                    onClick={() => setIsAdding(true)}/>
             {isAdding ? (
                 <EditTreatDialog 
                     open={isAdding}
@@ -75,17 +84,6 @@ function Treats() {
             ) : null}
         </div>
         );
-}
-
-function TreatListItem (treat) {
-    return (
-        <>
-            <div>{treat.name}</div>
-            <div>{treat.description}</div>
-            <div>{treat.calories}</div>
-            <div className={styles.listActions}></div>
-        </>
-    );
 }
 
 const treatsLoader = async () => {
