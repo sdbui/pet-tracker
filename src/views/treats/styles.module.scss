@@ -1,7 +1,10 @@
+@use '../../vars' as *;
+
 .container {
-    height: 100%;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 .treatActions {
     svg {
@@ -22,3 +25,15 @@
     min-width: 350px !important;
 }
 
+.addTreatIcon {
+    cursor: pointer;
+    &:hover {
+        fill: $light-cyan;
+    }
+
+    &.light {
+        &:hover {
+            fill: $dark-blue;
+        }
+    }
+}

@@ -8,6 +8,7 @@ import DialogActions from '@mui/joy/DialogActions';
 import DialogContent from '@mui/joy/DialogContent';
 import DialogTitle from '@mui/joy/DialogTitle';
 import Input from '@mui/joy/Input';
+import FormLabel from '@mui/joy/FormLabel';
 /**
  * This component will handle both Edit and Add of treats
  */
@@ -17,7 +18,7 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
         id: treat.id || null,
         name: treat.name || '',
         desc: treat.description || '',
-        cals: treat.calories || 0
+        cals: treat.calories || null
     });
 
 
@@ -44,8 +45,9 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
     return (
         <Modal open={open} onClose={onClose}>
             <ModalDialog>
-                <DialogTitle>{treat.id ? 'Editing' : 'Adding'} a Treat</DialogTitle>
+                <DialogTitle level="h2">{treat.id ? 'Editing' : 'Adding'} a Treat</DialogTitle>
                 <DialogContent>
+                    <FormLabel sx={{marginTop: '5px', fontSize: '0.8rem'}}>Name</FormLabel>
                     <Input
                         autoFocus
                         value={addForm.name}
@@ -55,6 +57,7 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
                         placeholder="Enter name"
                         onChange={onNameChange}
                     ></Input>
+                    <FormLabel sx={{marginTop: '5px', fontSize: '0.8rem'}}>Description</FormLabel>
                     <Input
                         value={addForm.desc}
                         id="description"
@@ -63,12 +66,14 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
                         placeholder="Enter description"
                         onChange={onDescriptionChange}
                     ></Input>
+                    <FormLabel sx={{marginTop: '5px', fontSize: '0.8rem'}}>Calories</FormLabel>
                     <Input
+                        sx={{width: '90px'}}
                         value={addForm.cals}
                         id="calories"
                         label="calories"
                         type="number"
-                        placeholder="Enter calories"
+                        placeholder="Cals"
                         onChange={onCaloriesChange}
                     ></Input>
                 </DialogContent>

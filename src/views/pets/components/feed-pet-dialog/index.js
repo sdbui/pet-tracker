@@ -10,6 +10,7 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
+import ListDivider from '@mui/joy/ListDivider';
 import Typography from '@mui/joy/Typography';
 
 
@@ -52,26 +53,27 @@ const FeedPetDialog = ({open, onClose, onSubmit, name}) => {
         <>
             {feedState.loading ? (<div>loading...</div>) : (
                 <Modal open={open} onClose={onClose}>
-                    <ModalDialog>
+                    <ModalDialog sx={{padding: 0, width:'450px'}}>
                         <DialogContent>
-                            <DialogTitle>Feeding <span className={styles.petName}>{name}</span> A Treat</DialogTitle>
+                            <DialogTitle level="h2" sx={{padding: '10px 20px'}}>
+                                Feeding <span className={styles.petName}>{name}</span> A Treat
+                            </DialogTitle>
                             <div className={styles['list-header']}>
-                                    <div>Treat</div>
-                                    <div>Calories</div>
+                                <Typography level="body-sm">Calories</Typography>
                             </div>
                             <List>
                                 {feedState.list.map((treat, idx)=>(
-                                    <ListItem key={idx}>
-                                        <ListItemButton
-                                            sx={{padding: '0 0'}}
-                                            onClick={()=> onSubmit(treat)} >
-                                            <ListItemContent>
-                                                <Typography>{treat?.name}</Typography>
-                                                <Typography>{treat?.description}</Typography>
-                                            </ListItemContent>
-                                            <p>{treat.calories}</p>
-                                        </ListItemButton>
-                                    </ListItem>
+                                        <ListItem key={idx}>
+                                            <ListItemButton
+                                                sx={{padding: '0 20px'}}
+                                                onClick={()=> onSubmit(treat)} >
+                                                <ListItemContent>
+                                                    <Typography level="title-lg">{treat?.name}</Typography>
+                                                    <Typography level="body-sm">{treat?.description}</Typography>
+                                                </ListItemContent>
+                                                <p>{treat.calories}</p>
+                                            </ListItemButton>
+                                        </ListItem>
                                 ))}
                             </List>
                         </DialogContent>

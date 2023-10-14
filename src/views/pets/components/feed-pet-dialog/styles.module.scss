@@ -9,10 +9,13 @@
 */
 
 .petName {
-    color: $shadow-blue;
+    color: $light-blue;
+    font-weight: 800;
+    text-decoration: underline  ;
 }
 
 .list-header {
+    padding: 0 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
 }

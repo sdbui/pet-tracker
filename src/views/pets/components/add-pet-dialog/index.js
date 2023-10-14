@@ -7,6 +7,7 @@ import DialogActions from '@mui/joy/DialogActions';
 import DialogContent from '@mui/joy/DialogContent';
 import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
+import Stack from '@mui/joy/Stack';
 
 const defaultAddForm = {
     name: '',
@@ -41,33 +42,40 @@ const AddPetDialog = ({open, onClose, onAdd}) => {
     return (
         <Modal open={open} onClose={onClose}>
             <ModalDialog>
-                <DialogTitle>Add New Pet</DialogTitle>
+                <DialogTitle level="h2">Add New Pet</DialogTitle>
                 <DialogContent>
                     <Input 
                         autoFocus
                         id="name"
                         label="name"
                         type="text"
+                        placeholder="Enter name"
                         onChange={onNameChange}
                     />
                     <Input 
                         id="description"
                         label="description"
                         type="text"
+                        placeholder="Enter description"
                         onChange={onDescriptionChange}
                     />
-                    <Input 
-                        id="weight"
-                        label="weight"
-                        type="number"
-                        onChange={onWeightChange}
-                    />
-                    <Input 
-                        id="pic"
-                        label="pic"
-                        type="file"
-                        onChange={onFileChange}
-                    />
+                    <Stack direction="row" spacing={1}>
+                        <Input  
+                            sx={{flexBasis: '100px'}}
+                            id="weight"
+                            label="weight"
+                            type="number"
+                            placeholder="Weight"
+                            onChange={onWeightChange}
+                        />
+                        <Input 
+                            sx={{flexGrow:1}}
+                            id="pic"
+                            label="pic"
+                            type="file"
+                            onChange={onFileChange}
+                        />
+                    </Stack>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancel</Button>
