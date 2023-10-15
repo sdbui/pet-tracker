@@ -22,6 +22,9 @@ const AddPetDialog = ({open, onClose, onAdd}) => {
 
     async function submit() {
         await PetsService.addPet(addForm);
+        setAddForm(prev=> {
+            return {...defaultAddForm}
+        })
         onAdd();
     }
 
@@ -35,7 +38,6 @@ const AddPetDialog = ({open, onClose, onAdd}) => {
         setAddForm((prev)=>({...prev, description: e.target.value}))
     }
     function onWeightChange(e) {
-        console.log('change?')
         setAddForm((prev) => ({...prev, weight: e.target.value}))
     }
 
@@ -45,6 +47,7 @@ const AddPetDialog = ({open, onClose, onAdd}) => {
                 <DialogTitle level="h2">Add New Pet</DialogTitle>
                 <DialogContent>
                     <Input 
+                        autoComplete="off"
                         autoFocus
                         id="name"
                         label="name"
@@ -52,7 +55,8 @@ const AddPetDialog = ({open, onClose, onAdd}) => {
                         placeholder="Enter name"
                         onChange={onNameChange}
                     />
-                    <Input 
+                    <Input
+                        autoComplete="off"
                         id="description"
                         label="description"
                         type="text"
@@ -61,6 +65,7 @@ const AddPetDialog = ({open, onClose, onAdd}) => {
                     />
                     <Stack direction="row" spacing={1}>
                         <Input  
+                            autoComplete="off"
                             sx={{flexBasis: '100px'}}
                             id="weight"
                             label="weight"

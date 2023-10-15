@@ -51,35 +51,33 @@ const FeedPetDialog = ({open, onClose, onSubmit, name}) => {
 
     return (
         <>
-            {feedState.loading ? (<div>loading...</div>) : (
-                <Modal open={open} onClose={onClose}>
-                    <ModalDialog sx={{padding: 0, width:'450px'}}>
-                        <DialogContent>
-                            <DialogTitle level="h2" sx={{padding: '10px 20px'}}>
-                                Feeding <span className={styles.petName}>{name}</span> A Treat
-                            </DialogTitle>
-                            <div className={styles['list-header']}>
-                                <Typography level="body-sm">Calories</Typography>
-                            </div>
-                            <List>
-                                {feedState.list.map((treat, idx)=>(
-                                        <ListItem key={idx}>
-                                            <ListItemButton
-                                                sx={{padding: '0 20px'}}
-                                                onClick={()=> onSubmit(treat)} >
-                                                <ListItemContent>
-                                                    <Typography level="title-lg">{treat?.name}</Typography>
-                                                    <Typography level="body-sm">{treat?.description}</Typography>
-                                                </ListItemContent>
-                                                <p>{treat.calories}</p>
-                                            </ListItemButton>
-                                        </ListItem>
-                                ))}
-                            </List>
-                        </DialogContent>
-                    </ModalDialog>
-                </Modal>
-            )}
+            <Modal open={open} onClose={onClose}>
+                <ModalDialog sx={{padding: 0, width:'450px'}}>
+                    <DialogContent>
+                        <DialogTitle level="h2" sx={{padding: '10px 20px'}}>
+                            Feeding <span className={styles.petName}>{name}</span> A Treat
+                        </DialogTitle>
+                        <div className={styles['list-header']}>
+                            <Typography level="body-sm">Calories</Typography>
+                        </div>
+                        <List>
+                            {feedState.list.map((treat, idx)=>(
+                                    <ListItem key={idx}>
+                                        <ListItemButton
+                                            sx={{padding: '0 20px'}}
+                                            onClick={()=> onSubmit(treat)} >
+                                            <ListItemContent>
+                                                <Typography level="title-lg">{treat?.name}</Typography>
+                                                <Typography level="body-sm">{treat?.description}</Typography>
+                                            </ListItemContent>
+                                            <p>{treat.calories}</p>
+                                        </ListItemButton>
+                                    </ListItem>
+                            ))}
+                        </List>
+                    </DialogContent>
+                </ModalDialog>
+            </Modal>
         </>
     )
 }

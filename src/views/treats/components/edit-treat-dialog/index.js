@@ -56,6 +56,7 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
                         type="text"
                         placeholder="Enter name"
                         onChange={onNameChange}
+                        autoComplete="off"
                     ></Input>
                     <FormLabel sx={{marginTop: '5px', fontSize: '0.8rem'}}>Description</FormLabel>
                     <Input
@@ -65,6 +66,7 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
                         type="text"
                         placeholder="Enter description"
                         onChange={onDescriptionChange}
+                        autoComplete="off"
                     ></Input>
                     <FormLabel sx={{marginTop: '5px', fontSize: '0.8rem'}}>Calories</FormLabel>
                     <Input
@@ -75,6 +77,7 @@ const EditTreatDialog = ({open, onClose, onSubmit, treat = {}}) => {
                         type="number"
                         placeholder="Cals"
                         onChange={onCaloriesChange}
+                        autoComplete="off"
                     ></Input>
                 </DialogContent>
                 <DialogActions>

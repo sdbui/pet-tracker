@@ -184,7 +184,7 @@ app.post('/api/pets/feed', async (req, res) => {
 
 app.post('/api/pets', uploadMiddleware.single('pic'), async (req, res) => {
     let {name, description, weight } = req.body;
-    let pic = req.file.path.replace('public', '');
+    let pic = req.file?.path?.replace('public', '') || null;
     let date = new Date().toLocaleDateString();
     try {
         await db.Pet.create({
